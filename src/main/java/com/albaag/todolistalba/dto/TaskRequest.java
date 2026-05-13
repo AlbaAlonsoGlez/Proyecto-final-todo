@@ -1,5 +1,7 @@
 package com.albaag.todolistalba.dto;
 
+import com.albaag.todolistalba.model.Priority;
+import com.albaag.todolistalba.model.TaskStatus;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,21 +12,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskRequest {
-    @NotBlank(message = "El título no puede estar vacío")
-    @Size(max = 100, message = "Título demasiado largo. Máximo 100 caracteres.")
+    @NotBlank(message = "El título es obligatorio")
     private String title;
 
     private String description;
 
-    @Future(message = "La fecha límite debe ser en el futuro")
+    private String comments;
+
+    private boolean completed;
+
+    private boolean important;
+
+    private Priority priority;
+
+    private TaskStatus status;
+
     private LocalDateTime deadline;
 
-    @NotNull(message = "La tarea debe pertenecer a una categoría")
-    private Long categoryId;
+    private Set<Long> categoryIds;
+
+    private Set<Long> tagIds;
 }
