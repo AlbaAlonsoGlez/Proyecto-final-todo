@@ -35,6 +35,8 @@ public class CategoryService {
 
         Category category = Category.builder()
                 .title(request.getTitle())
+                .color(request.getColor())
+                .description(request.getDescription())
                 .build();
 
         Category saved = categoryRepository.save(category);
@@ -49,6 +51,8 @@ public class CategoryService {
                         new RuntimeException("La categoría no se ha encontrado :("));
 
         category.setTitle(request.getTitle());
+        category.setColor(request.getColor());
+        category.setDescription(request.getDescription());
 
         Category updated = categoryRepository.save(category);
 

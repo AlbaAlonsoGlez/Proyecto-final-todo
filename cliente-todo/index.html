@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whisker Notes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="img/cat.png">
+</head>
+<body>
+    <div class="d-flex" id="app-wrapper">
+
+        <nav id="sidebar" class="d-flex flex-column flex-shrink-0 bg-body-tertiary border-end">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center gap-2 px-3 py-3 text-decoration-none">
+                <img src="img/cat.png" alt="Whisker Notes" class="sidebar-logo">
+            </a>
+
+            <!-- <hr class="my-0"> -->
+
+            <ul class="nav nav-pills flex-column mb-auto px-2 py-2 gap-1">
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2" data-page="dashboard" role="button">
+                        <i class="bi bi-clipboard-data fs-5" data-icon="clipboard-data"></i>
+                        <span class="sidebar-text">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2" data-page="tasks" role="button">
+                        <i class="bi bi-list-task fs-5"></i>
+                        <span class="sidebar-text">Tareas</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2" data-page="categories" role="button">
+                        <i class="bi bi-bookmark-heart fs-5" data-icon="bookmark-heart"></i>
+                        <span class="sidebar-text">Categorías</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2" data-page="tags" role="button">
+                        <i class="bi bi-tags fs-5" data-icon="tags"></i>
+                        <span class="sidebar-text">Etiquetas</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2" data-page="users" role="button">
+                        <i class="bi bi-people fs-5" data-icon="people"></i>
+                        <span class="sidebar-text">Usuarios</span>
+                    </a>
+                </li>
+            </ul>
+
+            <hr class="my-0">
+
+            <div class="sidebar-footer d-flex align-items-center gap-2 px-3 py-3">
+                <button id="btn-sidebar-toggle" class="btn btn-sm border-0 text-primary" title="Colapsar menu">
+                    <i class="bi bi-chevron-double-left fs-5"></i>
+                </button>
+            </div>
+        </nav>
+
+        <main id="main-content" class="flex-grow-1 d-flex flex-column">
+            <header id="top-bar" class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-body flex-shrink-0">
+                <div class="d-flex align-items-center gap-2">
+                    <button id="btn-sidebar-open" class="btn btn-sm btn-outline-secondary d-none" title="Abrir menu">
+                        <i class="bi bi-list fs-5"></i>
+                    </button>
+                    <span class="fw-semibold fs-5">Whisker Notes</span>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <button id="btn-theme-toggle" class="btn btn-sm border-0 text-primary" title="Cambiar tema">
+                        <i class="bi bi-moon-stars-fill fs-5"></i>
+                    </button>
+                    <a class="d-flex align-items-center gap-2 text-decoration-none text-primary" data-page="profile" role="button">
+                        <span class="d-none d-sm-inline" id="topbar-username">Mi Perfil</span>
+                        <span class="topbar-avatar" id="topbar-avatar"></span>
+                    </a>
+                    <button id="btn-logout" class="btn btn-sm btn-outline-primary" title="Cerrar sesion">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div id="content-area" class="flex-grow-1 overflow-auto p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 id="page-title" class="mb-0">Dashboard</h2>
+                    <div>
+                        <button class="btn btn-primary btn-sm d-none align-items-center gap-1" id="btn-create-task">
+                            <i class="bi bi-plus-lg"></i>
+                            <span class="d-none d-sm-inline">Nueva tarea</span>
+                        </button>
+                        <button class="btn btn-primary btn-sm d-none align-items-center gap-1" id="btn-create-category">
+                            <i class="bi bi-plus-lg"></i>
+                            <span class="d-none d-sm-inline">Nueva categoría</span>
+                        </button>
+                        <button class="btn btn-primary btn-sm d-none align-items-center gap-1" id="btn-create-tag">
+                            <i class="bi bi-plus-lg"></i>
+                            <span class="d-none d-sm-inline">Nueva etiqueta</span>
+                        </button>
+                        <button class="btn btn-primary btn-sm d-none align-items-center gap-1" id="btn-create-user">
+                            <i class="bi bi-plus-lg"></i>
+                            <span class="d-none d-sm-inline">Nuevo usuario</span>
+                        </button>
+                    </div>
+                </div>
+
+                <section id="page-dashboard" class="page-section">
+
+                    <div id="dashboard-loading" class="text-center py-5 d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="text-muted mt-2">Cargando dashboard...</p>
+                    </div>
+
+                    <div id="dashboard-error" class="alert alert-danger d-none" role="alert"></div>
+
+                    <div id="dashboard-content" class="row g-4">
+
+                        <!-- Left column: stat cards -->
+                        <div class="col-12 col-lg-4">
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-1 g-3" id="dashboard-cards">
+                                <div class="col">
+                                    <div class="card h-100 dash-card">
+                                        <div class="card-body d-flex align-items-center gap-3">
+                                            <div class="dash-icon bg-primary-subtle text-primary">
+                                                <i class="bi bi-list-check fs-4"></i>
+                                            </div>
+                                            <div>
+                                                <div class="dash-count fs-3 fw-bold" id="dash-total">--</div>
+                                                <div class="text-muted small">Total de tareas</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card h-100 dash-card">
+                                        <div class="card-body d-flex align-items-center gap-3">
+                                            <div class="dash-icon bg-warning-subtle text-warning">
+                                                <i class="bi bi-hourglass-split fs-4"></i>
+                                            </div>
+                                            <div>
+                                                <div class="dash-count fs-3 fw-bold" id="dash-active">--</div>
+                                                <div class="text-muted small">Tareas activas</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card h-100 dash-card">
+                                        <div class="card-body d-flex align-items-center gap-3">
+                                            <div class="dash-icon bg-danger-subtle text-danger">
+                                                <i class="bi bi-exclamation-triangle fs-4"></i>
+                                            </div>
+                                            <div>
+                                                <div class="dash-count fs-3 fw-bold" id="dash-high-priority">--</div>
+                                                <div class="text-muted small">Prioridad alta</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card h-100 dash-card">
+                                        <div class="card-body d-flex align-items-center gap-3">
+                                            <div class="dash-icon bg-info-subtle text-info">
+                                                <i class="bi bi-calendar-event fs-4"></i>
+                                            </div>
+                                            <div>
+                                                <div class="dash-count fs-3 fw-bold" id="dash-near-deadline">--</div>
+                                                <div class="text-muted small">Próximas a vencer</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card h-100 dash-card">
+                                        <div class="card-body d-flex align-items-center gap-3">
+                                            <div class="dash-icon bg-success-subtle text-success">
+                                                <i class="bi bi-bookmark-heart fs-4"></i>
+                                            </div>
+                                            <div>
+                                                <div class="dash-count fs-3 fw-bold" id="dash-categories">--</div>
+                                                <div class="text-muted small">Categorías</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card h-100 dash-card">
+                                        <div class="card-body d-flex align-items-center gap-3">
+                                            <div class="dash-icon bg-secondary-subtle text-secondary">
+                                                <i class="bi bi-tags fs-4"></i>
+                                            </div>
+                                            <div>
+                                                <div class="dash-count fs-3 fw-bold" id="dash-tags">--</div>
+                                                <div class="text-muted small">Etiquetas</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right column: calendar -->
+                        <div class="col-12 col-lg-8">
+                            <div class="card dash-calendar-card">
+                                <div class="card-header d-flex align-items-center justify-content-between">
+                                    <button class="btn btn-sm btn-outline-secondary" id="cal-prev">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </button>
+                                    <h6 class="mb-0 fw-bold" id="cal-title"></h6>
+                                    <button class="btn btn-sm btn-outline-secondary" id="cal-next">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body p-2">
+                                    <div class="cal-grid" id="cal-grid"></div>
+                                </div>
+                                <div id="cal-day-panel" class="d-none">
+                                    <div class="card-header d-flex align-items-center justify-content-between py-2">
+                                        <span class="fw-bold small" id="cal-day-title"></span>
+                                        <button class="btn btn-sm btn-close" id="cal-day-close"></button>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <ul class="list-group list-group-flush" id="cal-day-list"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+                <section id="page-tasks" class="page-section d-none">
+
+                    <!-- Filter bar -->
+                    <div class="row g-2 mb-3 align-items-end" id="tasks-filters">
+                        <div class="col-12 col-md-4 col-lg-3">
+                            <label class="form-label small mb-1" for="filter-search">Buscar</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="text" class="form-control" id="filter-search" placeholder="Buscar por título...">
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <label class="form-label small mb-1" for="filter-status">Estado</label>
+                            <select class="form-select form-select-sm" id="filter-status">
+                                <option value="">Todos</option>
+                                <option value="PENDIENTE">Pendiente</option>
+                                <option value="EN_PROGRESO">En progreso</option>
+                                <option value="COMPLETADA">Completada</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <label class="form-label small mb-1" for="filter-priority">Prioridad</label>
+                            <select class="form-select form-select-sm" id="filter-priority">
+                                <option value="">Todas</option>
+                                <option value="BAJA">Baja</option>
+                                <option value="MEDIA">Media</option>
+                                <option value="ALTA">Alta</option>
+                                <option value="URGENTE">Urgente</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <label class="form-label small mb-1" for="filter-category">Categoría</label>
+                            <select class="form-select form-select-sm" id="filter-category">
+                                <option value="">Todas</option>
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <label class="form-label small mb-1" for="filter-tag">Etiqueta</label>
+                            <select class="form-select form-select-sm" id="filter-tag">
+                                <option value="">Todas</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-lg-1 d-flex gap-2 align-items-end">
+                            <button class="btn btn-sm btn-outline-warning" id="filter-important" title="Solo importantes" data-active="false">
+                                <i class="bi bi-star"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" id="filter-overdue" title="Solo vencidas" data-active="false">
+                                <i class="bi bi-clock-history"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="text-muted small mb-3" id="tasks-count"></p>
+
+                    <div id="tasks-loading" class="text-center py-5 d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="text-muted mt-2">Cargando tareas...</p>
+                    </div>
+
+                    <div id="tasks-error" class="alert alert-danger d-none" role="alert"></div>
+
+                    <div id="tasks-empty" class="text-center py-5 d-none">
+                        <i class="bi bi-inbox fs-1 text-muted"></i>
+                        <p class="text-muted mt-2" id="tasks-empty-msg">No se encontraron tareas :(</p>
+                    </div>
+
+                    <div id="tasks-grid" class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3"></div>
+                </section>
+
+                <section id="page-categories" class="page-section d-none">
+                    <p class="text-muted small mb-3" id="categories-count"></p>
+
+                    <div id="categories-loading" class="text-center py-5 d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="text-muted mt-2">Cargando categorías...</p>
+                    </div>
+
+                    <div id="categories-error" class="alert alert-danger d-none" role="alert"></div>
+
+                    <div id="categories-empty" class="text-center py-5 d-none">
+                        <i class="bi bi-bookmark-x fs-1 text-muted"></i>
+                        <p class="text-muted mt-2" id="categories-empty-msg">Todavía no hay categorías :(</p>
+                    </div>
+
+                    <div id="categories-grid" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3"></div>
+                </section>
+
+                <section id="page-tags" class="page-section d-none">
+                    <p class="text-muted small mb-3" id="tags-count"></p>
+
+                    <div id="tags-loading" class="text-center py-5 d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="text-muted mt-2">Cargando etiquetas...</p>
+                    </div>
+
+                    <div id="tags-error" class="alert alert-danger d-none" role="alert"></div>
+
+                    <div id="tags-empty" class="text-center py-5 d-none">
+                        <i class="bi bi-tag-x fs-1 text-muted"></i>
+                        <p class="text-muted mt-2" id="tags-empty-msg">Todavía no hay etiquetas :(</p>
+                    </div>
+
+                    <div id="tags-grid" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-3"></div>
+                </section>
+
+                <section id="page-users" class="page-section d-none">
+                    <div id="users-loading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                        <p class="text-muted mt-2">Cargando usuarios...</p>
+                    </div>
+
+                    <div id="users-error" class="alert alert-danger d-none" role="alert"></div>
+
+                    <div id="users-empty" class="text-center py-5 d-none">
+                        <i class="bi bi-people fs-1 text-muted"></i>
+                        <p class="text-muted mt-2">Todavía no hay usuarios registrados :(</p>
+                    </div>
+
+                    <div id="users-table-wrapper" class="d-none">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Usuario</th>
+                                        <th>Nombre completo</th>
+                                        <th>Email</th>
+                                        <th>Rol</th>
+                                        <th class="text-end">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="page-profile" class="page-section d-none">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5">
+
+                            <div id="profile-alert" class="alert alert-danger d-none" role="alert"></div>
+                            <div id="profile-success" class="alert alert-success d-none" role="alert"></div>
+
+                            <!-- View mode -->
+                            <div id="profile-view">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-start gap-4">
+                                            <div class="d-flex flex-column align-items-center flex-shrink-0">
+                                                <div class="avatar-upload-wrapper" id="avatar-upload-wrapper" title="Cambiar foto de perfil">
+                                                    <div class="profile-avatar" id="profile-avatar"></div>
+                                                    <div class="avatar-overlay"><i class="bi bi-camera-fill"></i></div>
+                                                    <input type="file" id="avatar-file-input" accept="image/png,image/jpeg,image/gif,image/webp" class="d-none">
+                                                </div>
+                                                <button class="btn btn-link btn-sm text-danger p-0 mt-1 d-none" id="btn-remove-avatar">Quitar foto</button>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex align-items-center gap-2 mb-1">
+                                                    <h5 class="mb-0" id="profile-fullname-display"></h5>
+                                                    <span class="badge" id="profile-role-badge"></span>
+                                                </div>
+                                                <p class="text-muted small mb-2">@<span id="profile-username-display"></span></p>
+                                                <p class="mb-0 d-flex align-items-center gap-2">
+                                                    <i class="bi bi-envelope text-muted"></i>
+                                                    <span id="profile-email-display"></span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer text-end bg-transparent">
+                                        <button class="btn btn-outline-primary btn-sm" id="btn-edit-profile">
+                                            <i class="bi bi-pencil me-1"></i>Editar perfil
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Edit mode -->
+                            <div id="profile-edit" class="d-none">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-start gap-4">
+                                            <div class="d-flex flex-column align-items-center flex-shrink-0 d-none d-sm-flex">
+                                                <div class="profile-avatar" id="profile-avatar-edit"></div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <form id="form-profile" novalidate>
+                                                    <div class="mb-3">
+                                                        <label for="profile-username-input" class="form-label">Usuario</label>
+                                                        <input type="text" class="form-control" id="profile-username-input" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="profile-fullname-input" class="form-label">Nombre completo</label>
+                                                        <input type="text" class="form-control" id="profile-fullname-input">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="profile-email-input" class="form-label">Email</label>
+                                                        <input type="email" class="form-control" id="profile-email-input" required>
+                                                    </div>
+                                                    <hr>
+                                                    <p class="text-muted small mb-2">Dejar en blanco para mantener la contraseña actual</p>
+                                                    <div class="mb-3">
+                                                        <label for="profile-password-input" class="form-label">Nueva contraseña</label>
+                                                        <input type="password" class="form-control" id="profile-password-input">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="profile-password2-input" class="form-label">Confirmar contraseña</label>
+                                                        <input type="password" class="form-control" id="profile-password2-input">
+                                                    </div>
+                                                    <div class="d-flex justify-content-end gap-2">
+                                                        <button type="button" class="btn btn-outline-secondary" id="btn-cancel-profile">Cancelar</button>
+                                                        <button type="submit" class="btn btn-primary" id="btn-save-profile">Guardar</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
+                <section id="page-login" class="page-section d-none">
+                    <div id="login-decorations"></div>
+                    <div class="row justify-content-center align-items-center min-vh-100 py-4">
+                        <div class="col-sm-8 col-md-5 col-lg-4 login-card">
+                            <div class="text-center mb-4">
+                                <img src="img/cat.png" alt="Whisker Notes" class="login-logo">
+                                <h3 class="mt-2">Whisker Notes</h3>
+                            </div>
+
+                            <div id="login-form-wrapper">
+                                <div id="login-alert" class="alert alert-danger d-none" role="alert"></div>
+                                <form id="form-login" novalidate>
+                                    <div class="mb-3">
+                                        <label for="login-username" class="form-label">Usuario</label>
+                                        <input type="text" class="form-control" id="login-username" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="login-password" class="form-label">Contraseña</label>
+                                        <input type="password" class="form-control" id="login-password" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100" id="btn-login">Iniciar Sesión</button>
+                                </form>
+                                <p class="text-center mt-3">
+                                    ¿No tienes cuenta?
+                                    <a href="#" id="show-register" class="text-primary">Regístrate</a>
+                                </p>
+                            </div>
+
+                            <div id="register-form-wrapper" class="d-none">
+                                <div id="register-alert" class="alert alert-danger d-none" role="alert"></div>
+                                <div id="register-success" class="alert alert-success d-none" role="alert"></div>
+                                <form id="form-register" novalidate>
+                                    <div class="mb-3">
+                                        <label for="reg-username" class="form-label">Usuario</label>
+                                        <input type="text" class="form-control" id="reg-username" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="reg-email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="reg-email" placeholder="nombre@ejemplo.es" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="reg-password" class="form-label">Contraseña</label>
+                                        <input type="password" class="form-control" id="reg-password" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="reg-password2" class="form-label">Confirmar contraseña</label>
+                                        <input type="password" class="form-control" id="reg-password2" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100" id="btn-register">Registrarse</button>
+                                </form>
+                                <p class="text-center mt-3">
+                                    ¿Ya tienes cuenta?
+                                    <a href="#" id="show-login" class="text-primary">Inicia sesión</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Task Detail Modal -->
+    <div class="modal fade" id="taskDetailModal" tabindex="-1" aria-labelledby="taskDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="taskDetailModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form id="form-edit-task" novalidate>
+                    <div class="modal-body">
+                        <div id="edit-task-alert" class="alert alert-danger d-none" role="alert"></div>
+
+                        <!-- View mode -->
+                        <div id="task-view">
+                            <div class="d-flex flex-wrap gap-2 mb-3" id="modal-badges"></div>
+                            <div class="mb-3" id="modal-deadline-row">
+                                <i class="bi bi-calendar-event me-1"></i>
+                                <span id="modal-deadline"></span>
+                            </div>
+                            <hr>
+                            <h6>Descripción</h6>
+                            <p id="modal-description" class="mb-3" style="white-space:pre-wrap;"></p>
+                            <div id="modal-comments-section" class="d-none">
+                                <h6>Comentarios</h6>
+                                <p id="modal-comments" style="white-space:pre-wrap;"></p>
+                            </div>
+                            <hr>
+                            <div class="d-flex flex-wrap gap-4">
+                                <div id="modal-categories-section">
+                                    <h6 class="small text-muted mb-1">Categorías</h6>
+                                    <div id="modal-categories" class="d-flex flex-wrap gap-1"></div>
+                                </div>
+                                <div id="modal-tags-section">
+                                    <h6 class="small text-muted mb-1">Etiquetas</h6>
+                                    <div id="modal-tags" class="d-flex flex-wrap gap-1"></div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="text-muted small">
+                                <span>Creada: <span id="modal-createdAt"></span></span>
+                                <span class="ms-3" id="modal-updatedAt-section">Actualizada: <span id="modal-updatedAt"></span></span>
+                            </div>
+                        </div>
+
+                        <!-- Edit mode -->
+                        <div id="task-edit-fields" class="d-none">
+                            <div class="mb-3">
+                                <label for="edit-title" class="form-label">Título <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="edit-title" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-description" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="edit-description" rows="3"></textarea>
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6 col-md-4">
+                                    <label for="edit-status" class="form-label">Estado</label>
+                                    <select class="form-select" id="edit-status">
+                                        <option value="PENDIENTE">Pendiente</option>
+                                        <option value="EN_PROGRESO">En progreso</option>
+                                        <option value="COMPLETADA">Completada</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <label for="edit-priority" class="form-label">Prioridad</label>
+                                    <select class="form-select" id="edit-priority">
+                                        <option value="">Sin prioridad</option>
+                                        <option value="BAJA">Baja</option>
+                                        <option value="MEDIA">Media</option>
+                                        <option value="ALTA">Alta</option>
+                                        <option value="URGENTE">Urgente</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <label for="edit-deadline" class="form-label">Fecha límite</label>
+                                    <input type="datetime-local" class="form-control" id="edit-deadline">
+                                </div>
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6">
+                                    <label for="edit-categories" class="form-label">Categorías</label>
+                                    <select class="form-select" id="edit-categories" multiple size="3"></select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="edit-tags" class="form-label">Etiquetas</label>
+                                    <select class="form-select" id="edit-tags" multiple size="3"></select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-comments" class="form-label">Comentarios</label>
+                                <textarea class="form-control" id="edit-comments" rows="2"></textarea>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="edit-important">
+                                <label class="form-check-label" for="edit-important">Marcar como importante</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger d-none" id="btn-delete-task">Eliminar</button>
+                        <button type="button" class="btn btn-outline-secondary d-none" id="btn-edit-task">Editar</button>
+                        <button type="button" class="btn btn-outline-secondary d-none" id="btn-cancel-edit-task">Cancelar</button>
+                        <button type="submit" class="btn btn-primary d-none" id="btn-save-task">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Modal (view / create / edit) -->
+    <div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoryModalLabel">Categoría</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form id="form-category" novalidate>
+                    <div class="modal-body">
+                        <div id="category-alert" class="alert alert-danger d-none" role="alert"></div>
+
+                        <!-- View mode -->
+                        <div id="category-view" class="d-none">
+                            <div class="text-center py-3">
+                                <span id="category-view-badge" class="badge fs-5 px-3 py-2"></span>
+                            </div>
+                            <p id="category-view-description" class="text-muted text-center mb-0 d-none"></p>
+                        </div>
+
+                        <!-- Edit/Create mode -->
+                        <div id="category-form-fields" class="d-none">
+                            <div class="mb-3">
+                                <label for="category-title-input" class="form-label">Nombre <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="category-title-input" maxlength="50" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Color</label>
+                                <div id="category-color-palette" class="d-flex flex-wrap gap-2"></div>
+                                <input type="hidden" id="category-color-input">
+                            </div>
+                            <div class="mb-3">
+                                <label for="category-description-input" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="category-description-input" rows="2" maxlength="255"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger d-none" id="btn-delete-category">Eliminar</button>
+                        <button type="button" class="btn btn-outline-secondary d-none" id="btn-edit-category">Editar</button>
+                        <button type="button" class="btn btn-outline-secondary d-none" id="btn-cancel-edit-category">Cancelar</button>
+                        <button type="submit" class="btn btn-primary d-none" id="btn-save-category">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tag Modal (view / create / edit) -->
+    <div class="modal fade" id="tagModal" tabindex="-1" aria-labelledby="tagModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="tagModalLabel">Etiqueta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form id="form-tag" novalidate>
+                    <div class="modal-body">
+                        <div id="tag-alert" class="alert alert-danger d-none" role="alert"></div>
+
+                        <!-- View mode -->
+                        <div id="tag-view" class="d-none">
+                            <div class="text-center py-3">
+                                <span id="tag-view-badge" class="badge fs-5 px-3 py-2"></span>
+                            </div>
+                            <p id="tag-view-description" class="text-muted text-center mb-0 d-none"></p>
+                        </div>
+
+                        <!-- Edit/Create mode -->
+                        <div id="tag-form-fields" class="d-none">
+                            <div class="mb-3">
+                                <label for="tag-name-input" class="form-label">Nombre <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="tag-name-input" maxlength="50" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Color</label>
+                                <div id="tag-color-palette" class="d-flex flex-wrap gap-2"></div>
+                                <input type="hidden" id="tag-color-input">
+                            </div>
+                            <div class="mb-3">
+                                <label for="tag-description-input" class="form-label">Descripción</label>
+                                <textarea class="form-control" id="tag-description-input" rows="2" maxlength="255"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger d-none" id="btn-delete-tag">Eliminar</button>
+                        <button type="button" class="btn btn-outline-secondary d-none" id="btn-edit-tag">Editar</button>
+                        <button type="button" class="btn btn-outline-secondary d-none" id="btn-cancel-edit-tag">Cancelar</button>
+                        <button type="submit" class="btn btn-primary d-none" id="btn-save-tag">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Modal (view / create / edit) -->
+    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userModalLabel">Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form id="form-user" novalidate>
+                    <div class="modal-body">
+                        <div id="user-alert" class="alert alert-danger d-none" role="alert"></div>
+
+                        <!-- View mode -->
+                        <div id="user-view" class="d-none">
+                            <div class="d-flex align-items-start gap-3 mb-3">
+                                <div class="profile-avatar flex-shrink-0" id="user-view-avatar"></div>
+                                <dl class="row mb-0 flex-grow-1">
+                                    <dt class="col-sm-4">Usuario</dt>
+                                    <dd class="col-sm-8" id="user-view-username"></dd>
+
+                                    <dt class="col-sm-4">Nombre completo</dt>
+                                    <dd class="col-sm-8" id="user-view-fullname"></dd>
+
+                                    <dt class="col-sm-4">Email</dt>
+                                    <dd class="col-sm-8" id="user-view-email"></dd>
+
+                                    <dt class="col-sm-4">Rol</dt>
+                                    <dd class="col-sm-8"><span id="user-view-role" class="badge"></span></dd>
+                                </dl>
+                            </div>
+                        </div>
+
+                        <!-- Edit/Create mode -->
+                        <div id="user-form-fields" class="d-none">
+                            <div class="mb-3">
+                                <label for="user-username-input" class="form-label">Usuario <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="user-username-input" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="user-fullname-input" class="form-label">Nombre completo</label>
+                                <input type="text" class="form-control" id="user-fullname-input">
+                            </div>
+                            <div class="mb-3">
+                                <label for="user-email-input" class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="user-email-input" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="user-password-input" class="form-label">Contraseña <span id="user-password-hint" class="text-muted small"></span></label>
+                                <input type="password" class="form-control" id="user-password-input">
+                            </div>
+                            <div class="mb-3">
+                                <label for="user-role-input" class="form-label">Rol</label>
+                                <select class="form-select" id="user-role-input">
+                                    <option value="USER">Usuario</option>
+                                    <option value="GESTOR">Gestor</option>
+                                    <option value="ADMIN">Administrador</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger d-none" id="btn-delete-user">Eliminar</button>
+                        <button type="button" class="btn btn-outline-secondary d-none" id="btn-edit-user">Editar</button>
+                        <button type="button" class="btn btn-outline-secondary d-none" id="btn-cancel-edit-user">Cancelar</button>
+                        <button type="submit" class="btn btn-primary d-none" id="btn-save-user">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Task Modal -->
+    <div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createTaskModalLabel">Nueva tarea</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <form id="form-create-task" novalidate>
+                    <div class="modal-body">
+                        <div id="create-task-alert" class="alert alert-danger d-none" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label for="create-title" class="form-label">Título <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="create-title" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="create-description" class="form-label">Descripción</label>
+                            <textarea class="form-control" id="create-description" rows="3"></textarea>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6 col-md-4">
+                                <label for="create-status" class="form-label">Estado</label>
+                                <select class="form-select" id="create-status">
+                                    <option value="PENDIENTE" selected>Pendiente</option>
+                                    <option value="EN_PROGRESO">En progreso</option>
+                                    <option value="COMPLETADA">Completada</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <label for="create-priority" class="form-label">Prioridad</label>
+                                <select class="form-select" id="create-priority">
+                                    <option value="">Sin prioridad</option>
+                                    <option value="BAJA">Baja</option>
+                                    <option value="MEDIA">Media</option>
+                                    <option value="ALTA">Alta</option>
+                                    <option value="URGENTE">Urgente</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-6 col-md-4">
+                                <label for="create-deadline" class="form-label">Fecha límite</label>
+                                <input type="datetime-local" class="form-control" id="create-deadline">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-sm-6">
+                                <label for="create-categories" class="form-label">Categorías</label>
+                                <select class="form-select" id="create-categories" multiple size="3"></select>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="create-tags" class="form-label">Etiquetas</label>
+                                <select class="form-select" id="create-tags" multiple size="3"></select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="create-comments" class="form-label">Comentarios</label>
+                            <textarea class="form-control" id="create-comments" rows="2"></textarea>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="create-important">
+                            <label class="form-check-label" for="create-important">Marcar como importante</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary" id="btn-submit-task">Crear tarea</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content text-center">
+                <div class="modal-body py-4">
+                    <i class="bi bi-box-arrow-right fs-1 text-primary d-block mb-2"></i>
+                    <h5 id="logoutModalLabel" class="mb-1">Cerrar sesión</h5>
+                    <p class="text-body-secondary mb-0">Vas a cerrar la sesión D:</p>
+                </div>
+                <div class="modal-footer justify-content-center border-0 pt-0 pb-3">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn-confirm-logout">Cerrar sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/tasks.js"></script>
+    <script src="js/categories.js"></script>
+    <script src="js/tags.js"></script>
+    <script src="js/users.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

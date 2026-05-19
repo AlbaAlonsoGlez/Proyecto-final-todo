@@ -34,6 +34,8 @@ public class TagService {
 
         Tag tag = Tag.builder()
                 .name(request.getName())
+                .color(request.getColor())
+                .description(request.getDescription())
                 .build();
 
         Tag saved = tagRepository.save(tag);
@@ -48,6 +50,8 @@ public class TagService {
                         new RuntimeException("El tag no ha sido encontrado :("));
 
         tag.setName(request.getName());
+        tag.setColor(request.getColor());
+        tag.setDescription(request.getDescription());
 
         Tag updated = tagRepository.save(tag);
 

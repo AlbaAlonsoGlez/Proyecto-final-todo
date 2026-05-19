@@ -1,10 +1,7 @@
 package com.albaag.todolistalba.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 @Getter
 @Setter
@@ -21,5 +18,12 @@ public class User {
 
     private String username, password, email, fullname;
 
+    @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] avatar;
+
+    private String avatarContentType;
 }

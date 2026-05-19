@@ -1,9 +1,7 @@
 package com.albaag.todolistalba.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 @Getter
 @Setter
@@ -18,4 +16,10 @@ public class Category {
     private Long id;
 
     private String title;
+
+    @Column(length = 7)
+    private String color;
+
+    @Column(length = 255)
+    private String description;
 }

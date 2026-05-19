@@ -2,7 +2,6 @@ package com.albaag.todolistalba.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
