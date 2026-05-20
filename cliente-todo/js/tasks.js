@@ -310,6 +310,19 @@ function buildTaskCard(task) {
         footer.appendChild(deadlineDiv);
     }
 
+    // Author
+    if (task.author) {
+        var authorDiv = document.createElement('div');
+        authorDiv.className = 'small text-muted d-flex align-items-center mt-2';
+        var authorAvatar = document.createElement('span');
+        authorAvatar.className = 'profile-avatar d-inline-flex me-1';
+        renderAvatar(authorAvatar, task.author, 20);
+        authorDiv.appendChild(authorAvatar);
+        var authorName = document.createTextNode(task.author.fullname || task.author.username);
+        authorDiv.appendChild(authorName);
+        footer.appendChild(authorDiv);
+    }
+
     body.appendChild(footer);
     card.appendChild(body);
     col.appendChild(card);
@@ -415,6 +428,17 @@ function openTaskDetail(task) {
         tagSection.classList.remove('d-none');
     } else {
         tagSection.classList.add('d-none');
+    }
+
+    // Author
+    var authorSection = document.getElementById('modal-author-section');
+    if (task.author) {
+        document.getElementById('modal-author-name').textContent = task.author.fullname || task.author.username;
+        document.getElementById('modal-author-role').textContent = task.author.role || '';
+        renderAvatar(document.getElementById('modal-author-avatar'), task.author, 32);
+        authorSection.classList.remove('d-none');
+    } else {
+        authorSection.classList.add('d-none');
     }
 
     // Timestamps
