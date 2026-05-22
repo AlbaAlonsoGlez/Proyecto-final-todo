@@ -63,7 +63,7 @@ public class CategoryService {
 
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Category not found"));
+                        new RuntimeException("Categoría no encontrada"));
 
         categoryRepository.delete(category);
     }

@@ -23,15 +23,15 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // Public: frontend static files, registration and API docs
+                // Público: archivos estáticos del frontend, registro y documentación de la API
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/", "/index.html", "/css/**", "/js/**", "/img/**", "/assets/**", "/favicon.ico").permitAll()
                 .requestMatchers("/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                // Categories: anyone authenticated can read; ADMIN/GESTOR can write
+                // Categorías: cualquier usuario autenticado puede leer; solo ADMIN/GESTOR pueden escribir
                 .requestMatchers(HttpMethod.GET, "/categories/**").authenticated()
                 .requestMatchers("/categories/**").hasAnyRole("ADMIN", "GESTOR")
-                // Users: own profile & avatar are open to all authenticated; avatar GET is public (for img tags)
+                // Usuarios: perfil propio y avatar accesibles para cualquier autenticado; GET de avatar es público (para etiquetas img)
                 .requestMatchers(HttpMethod.GET, "/users/me").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/users/me").authenticated()
                 .requestMatchers(HttpMethod.POST, "/users/me/avatar").authenticated()
@@ -39,7 +39,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/users/*/avatar").permitAll()
                 .requestMatchers("/users/*/promote", "/users/*/demote").hasRole("ADMIN")
                 .requestMatchers("/users/**").hasRole("ADMIN")
-                // Everything else requires authentication
+                // Todo lo demás requiere autenticación
                 .anyRequest().authenticated()
             )
             .httpBasic(basic -> basic

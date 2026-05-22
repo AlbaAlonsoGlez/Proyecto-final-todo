@@ -39,7 +39,7 @@ public class DataSeeder {
 
             var now = LocalDateTime.now();
 
-            // Alba (ADMIN) - 3 tasks
+            // Alba (ADMIN) - 3 tareas
             taskRepo.save(Task.builder()
                     .title("Terminar proyecto intermodular")
                     .description("Terminar la memoria del proyecto intermodular.")
@@ -64,7 +64,7 @@ public class DataSeeder {
                     .categories(Set.of(personal)).tags(Set.of(lectura, investigacion))
                     .build());
 
-            // Bizcocho (GESTOR) - 3 tasks
+            // Bizcocho (GESTOR) - 3 tareas
             taskRepo.save(Task.builder()
                     .title("Comer calecetines")
                     .description("Comer calcetines de mis dueños.")
@@ -90,7 +90,7 @@ public class DataSeeder {
                     .categories(Set.of(hogar)).tags(Set.of(planificacion))
                     .build());
 
-            // Rober (USER) - 3 tasks
+            // Rober (USER) - 3 tareas
             taskRepo.save(Task.builder()
                     .title("Preparar partido del jueves")
                     .description("Preparar la alineación del partido de fútbol del jueves.")
