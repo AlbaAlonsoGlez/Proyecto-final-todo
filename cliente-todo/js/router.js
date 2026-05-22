@@ -39,6 +39,7 @@ function navigateTo(pageName) {
     if (onLogin) {
         sidebar.classList.add('d-none');
         topBar.classList.add('d-none');
+        clearAlerts();
     } else {
         sidebar.classList.remove('d-none');
         topBar.classList.remove('d-none');
