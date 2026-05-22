@@ -21,4 +21,9 @@ public interface TaskRepo extends JpaRepository<Task, Long> {
     List<Task> findByDeadlineBefore(LocalDateTime deadline);
     List<Task> findByTagsContaining(Tag tag);
     List<Task> findByCategoriesContaining(Category category);
+
+    List<Task> findByAuthorAndTitleContainingIgnoreCase(User author, String title);
+    List<Task> findByAuthorAndCompleted(User author, boolean completed);
+    List<Task> findByTitleContainingIgnoreCase(String title);
+    List<Task> findByCompleted(boolean completed);
 }

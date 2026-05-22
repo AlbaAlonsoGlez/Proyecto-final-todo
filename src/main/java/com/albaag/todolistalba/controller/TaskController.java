@@ -67,6 +67,16 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Buscar tareas", description = "Buscar tareas por título, estado completado o categoría")
+    @GetMapping("/search")
+    public ResponseEntity<List<TaskResponse>> search(
+            @Parameter(description = "Título (búsqueda parcial)") @RequestParam(required = false) String title,
+            @Parameter(description = "Estado de completado") @RequestParam(required = false) Boolean completed,
+            @Parameter(description = "ID de categoría") @RequestParam(required = false) Long category,
+            Authentication auth) {
+        return ResponseEntity.ok(taskService.searchTasks(auth.getName(), title, completed, category));
+    }
+
     @GetMapping("/status/{status}")
     public ResponseEntity<List<TaskResponse>> getByStatus(
             @Parameter(description = "Estado: PENDIENTE, EN_PROGRESO, COMPLETADA") @PathVariable TaskStatus status,

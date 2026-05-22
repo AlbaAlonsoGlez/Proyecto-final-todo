@@ -1,6 +1,6 @@
 package com.albaag.todolistalba.config;
 
-import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,7 +14,11 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -43,8 +47,11 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .httpBasic(basic -> basic
-                .authenticationEntryPoint((req, res, ex) ->
-                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
+            )
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
+                .accessDeniedHandler(customAccessDeniedHandler)
             );
         return http.build();
     }

@@ -184,6 +184,27 @@ public class TaskService {
         taskRepo.save(task);
     }
 
+    public List<TaskResponse> searchTasks(String username, String title, Boolean completed, Long categoryId) {
+        User user = getUser(username);
+        boolean admin = isAdmin(user);
+        List<Task> tasks;
+
+        if (title != null && !title.isBlank()) {
+            tasks = admin
+                    ? taskRepo.findByTitleContainingIgnoreCase(title)
+                    : taskRepo.findByAuthorAndTitleContainingIgnoreCase(user, title);
+        } else if (completed != null) {
+            tasks = admin
+                    ? taskRepo.findByCompleted(completed)
+                    : taskRepo.findByAuthorAndCompleted(user, completed);
+        } else if (categoryId != null) {
+            return findByCategory(username, categoryId);
+        } else {
+            return findAll(username);
+        }
+        return tasks.stream().map(TaskResponse::of).toList();
+    }
+
     public DashboardResponse getDashboard(String username) {
         User user = getUser(username);
         List<Task> tasks = isAdmin(user) ? taskRepo.findAll() : taskRepo.findByAuthor(user);
