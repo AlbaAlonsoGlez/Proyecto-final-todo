@@ -24,7 +24,7 @@ function initRouter() {
         navigateTo('login');
     }
 
-    document.getElementById('app-wrapper').style.display = '';
+    document.getElementById('app-wrapper').classList.add('app-ready');
 }
 
 function navigateTo(pageName) {
