@@ -23,6 +23,8 @@ function initRouter() {
     } else {
         navigateTo('login');
     }
+
+    document.getElementById('app-wrapper').style.display = '';
 }
 
 function navigateTo(pageName) {
